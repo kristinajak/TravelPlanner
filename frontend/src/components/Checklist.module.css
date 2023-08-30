@@ -1,0 +1,43 @@
+.checklist {
+  color: #fbd997;
+  text-decoration: none;
+  margin: 50px;
+}
+
+.checklist a {
+  color: #fbd997;
+}
+
+.checklist-tables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.checklist-tables ul {
+  list-style: none;
+}
+.checklist-table {
+  border: solid;
+  border-color: #fbd997;
+  background-color: #fbd997;
+  color: #242424;
+  margin: 5px;
+  padding: 10px;
+  flex: 0 0 200px;
+  border-radius: 5px;
+}
+
+.checklist-table-checked {
+  border: solid;
+  background-color: transparent;
+  color: #fbd997;
+  margin: 5px;
+  padding: 10px;
+  flex: 0 0 200px;
+  border-radius: 5px;
+}
+
+.text {
+  margin-top: 60px;
+}

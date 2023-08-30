@@ -1,0 +1,14 @@
+.checklist-item {
+  padding: 5px;
+}
+
+.checklist-item input[type="checkbox"] {
+  accent-color: #f6ad1b;
+}
+
+.remove-button {
+  background-color: transparent;
+  border: solid 1px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
