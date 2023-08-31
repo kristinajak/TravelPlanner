@@ -10,38 +10,25 @@ interface ChecklistItemProps {
   item: ChecklistItemData;
   tableName: string;
   onItemRemove: (itemId: number) => void;
-  // onItemMove: (movedItem: ChecklistItemData) => void;
+  onItemMove: (itemId: number, item: string) => void;
 }
 
 const ChecklistItem: React.FC<ChecklistItemProps> = ({
   item,
   tableName,
   onItemRemove,
-  // onItemMove,
+  onItemMove,
 }) => {
   const handleRemoveClick = () => {
     onItemRemove(item.id);
   };
-  // const moveItemHandler = async () => {
-  //   try {
-  //     const response = await Axios.post(
-  //       "/moveItem",
-  //       { tableName, item },
-  //       {
-  //         withCredentials: true,
-  //       }
-  //     );
-  //     if (response.status === 200) {
-  //       onItemMove(item);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error moving item:", error);
-  //   }
-  // };
+  const handleMoveClick = async () => {
+    onItemMove(item.id, item.item);
+  };
 
   return (
     <div className={classes["checklist-item"]}>
-      <input type="checkbox" />
+      <input type="checkbox" onChange={handleMoveClick} />
       <span>{item.item}</span>
       <button className={classes["remove-button"]} onClick={handleRemoveClick}>
         x

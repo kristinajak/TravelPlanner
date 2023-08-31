@@ -37,6 +37,12 @@ app.post("/register", async (req, res) => {
   const conn = await pool.getConnection();
   const selectQuery = `SELECT EXISTS(SELECT * FROM users WHERE email = ?)`;
   const [rows] = await conn.execute(selectQuery, [email]);
+  if (email.trim() === "" || password.trim() === "") {
+    conn.release();
+    return res
+      .status(400)
+      .json({ error: "Neither email nor password can be left blank" });
+  }
 
   if (rows[0][`EXISTS(SELECT * FROM users WHERE email = ?)`] === 1) {
     conn.release();
@@ -65,6 +71,11 @@ app.post("/login", async (req, res) => {
   const conn = await pool.getConnection();
   const selectQuery = `SELECT * FROM users WHERE email = ?`;
   const [rows, fields] = await conn.execute(selectQuery, [email]);
+  if (email.trim() === "") {
+    console.log("length", email.length);
+    conn.release();
+    return res.status(400).json({ error: "Email cannot be blank" });
+  }
   if (rows.length === 0) {
     conn.release();
     return res.status(400).json({ error: "Email does not exist" });
@@ -87,7 +98,10 @@ async function userChecklistItems(tableName, userId) {
   const conn = await pool.getConnection();
   const query = `SELECT ${tableName}.id, ${tableName}.item 
   FROM ${tableName} 
-  WHERE (${tableName}.user_id = ? OR ${tableName}.user_id = 'default') `;
+  WHERE (${tableName}.user_id = ? OR ${tableName}.user_id = 'default') AND ${tableName}.id NOT IN (
+    SELECT ${tableName}_checked.id 
+    FROM ${tableName}_checked 
+    WHERE ${tableName}_checked.user_id = ?)`;
   const [rows, fields] = await conn.query(query, [userId, userId]);
   console.log("userChecklistItems", rows);
   const checklistItems = rows.map((row) => {
@@ -99,9 +113,9 @@ async function userChecklistItems(tableName, userId) {
 
 async function userChecklistItemsChecked(tableName, userId) {
   const conn = await pool.getConnection();
-  const query = `SELECT ${tableName}_checked.id, ${tableName}_checked.item 
-  FROM ${tableName}_checked 
-  WHERE (${tableName}_checked.user_id = ? OR ${tableName}_checked.user_id = 'default')
+  const query = `SELECT ${tableName}.id, ${tableName}.item 
+  FROM ${tableName} 
+  WHERE (${tableName}.user_id = ? OR ${tableName}.user_id = 'default')
     `;
   const [rows, fields] = await conn.query(query, [userId]);
   console.log("userChecklistItemsChecked", rows);
@@ -153,7 +167,7 @@ app.get("/checklist_checked", async (req, res) => {
 
     if (userId) {
       const userItemsChecked = await userChecklistItemsChecked(
-        tableName,
+        `${tableName}_checked`,
         userId
       );
       console.log("checklist_checked", userItemsChecked);
@@ -170,43 +184,58 @@ app.get("/checklist_checked", async (req, res) => {
   }
 });
 
-app.post("/addItem", async (req, res) => {
+app.post("/moveItem/:tableName/:itemId", async (req, res) => {
   try {
-    const { tableName, newItem } = req.body;
+    const { tableName, itemId } = req.params;
     const userId = req.session.userId;
 
-    const query = `INSERT INTO ${tableName} (item, user_id) VALUES (?, ?)`;
+    const getItemQuery = `SELECT * FROM ${tableName} WHERE id = ?`;
+    const insertQuery = `INSERT INTO ${tableName}_checked (id, user_id, item) VALUES (?, ?, ?)`;
+
     const conn = await pool.getConnection();
-    const [rows, fields] = await conn.execute(query, [newItem, userId]);
-    conn.release();
-    res.sendStatus(200);
+
+    try {
+      const [rows] = await conn.execute(getItemQuery, [itemId]);
+      const itemData = rows[0];
+
+      await conn.execute(insertQuery, [itemId, userId, itemData.item]);
+
+      conn.release();
+      res.sendStatus(200);
+    } catch (error) {
+      conn.release();
+      console.error("Error moving checklist data:", error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while moving checklist data" });
+    }
   } catch (error) {
-    console.error("Error adding checklist data:", error);
+    console.error("Error moving checklist data:", error);
     res
       .status(500)
-      .json({ error: "An error occurred while adding checklist data" });
+      .json({ error: "An error occurred while moving checklist data" });
   }
 });
 
-// app.post("/moveItem", async (req, res) => {
-//   try {
-//     const { tableName, item } = req.body;
-//     const userId = req.session.userId;
+app.post("/moveItem/:tableName/:itemId", async (req, res) => {
+  try {
+    const { tableName, itemId } = req.params;
+    const userId = req.session.userId;
 
-//     const query = `INSERT INTO ${tableName}_checked (item, user_id) VALUES (?, ?)`;
-//     const conn = await pool.getConnection();
-//     const [rows, fields] = await conn.execute(query, [item, userId]);
-//     conn.release();
-//     res.sendStatus(200);
-//   } catch (error) {
-//     console.error("Error moving checklist data:", error);
-//     res
-//       .status(500)
-//       .json({ error: "An error occurred while moving checklist data" });
-//   }
-// });
+    const query = `INSERT INTO ${tableName}_checked (id, user_id) VALUES (?, ?)`;
+    const conn = await pool.getConnection();
+    const [rows, fields] = await conn.execute(query, [itemId, userId]);
+    conn.release();
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error moving checklist data:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while moving checklist data" });
+  }
+});
 
-app.post("/removeItem/:tableName/:itemId", async (req, res) => {
+app.delete("/removeItem/:tableName/:itemId", async (req, res) => {
   try {
     const { tableName, itemId } = req.params;
     const userId = req.session.userId;
@@ -215,11 +244,11 @@ app.post("/removeItem/:tableName/:itemId", async (req, res) => {
       return res.status(400).json({ error: "itemId is missing" });
     }
 
-    const query = `INSERT INTO ${tableName}_removed (id, user_id) VALUES (?, ?)`;
+    const query = `DELETE FROM ${tableName} WHERE id = ? AND user_id = ?`;
     const conn = await pool.getConnection();
 
     try {
-      await conn.execute(query, [itemId, userId || null]);
+      await conn.execute(query, [itemId, userId]);
       conn.release();
       res.status(200).json({ message: "Item deleted successfully" });
     } catch (error) {
@@ -230,6 +259,41 @@ app.post("/removeItem/:tableName/:itemId", async (req, res) => {
   } catch (error) {
     console.error("Error removing item:", error);
     res.status(500).json({ error: "An error occurred while removing item" });
+  }
+});
+
+app.post("/checklist/updateChecklist", async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const conn = await pool.getConnection();
+
+    const tableData = [
+      { table: "documents", checkedTable: "documents_checked" },
+      { table: "general", checkedTable: "general_checked" },
+      { table: "toiletries", checkedTable: "toiletries_checked" },
+      { table: "clothes", checkedTable: "clothes_checked" },
+      { table: "medicine", checkedTable: "medicine_checked" },
+      { table: "ToDo", checkedTable: "ToDo_checked" },
+    ];
+
+    for (const table of tableData) {
+      const query = `
+        INSERT INTO ${table.table} (id, item, user_id)
+        SELECT c.id, c.item, c.user_id
+        FROM ${table.checkedTable} c
+        LEFT JOIN ${table.table} d ON c.id = d.id
+        WHERE c.user_id = ? AND d.id IS NULL
+      `;
+      const removeQuery = `DELETE FROM ${table.checkedTable} WHERE user_id = ?`;
+      await conn.execute(query, [userId]);
+      await conn.execute(removeQuery, [userId]);
+    }
+
+    conn.release();
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "An error occurred" });
   }
 });
 

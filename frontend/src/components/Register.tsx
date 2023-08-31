@@ -61,8 +61,12 @@ function Register() {
         console.log("Error data:", data);
         throw new Error(data.error as string);
       }
-    } catch (error) {
-      setErrorMessage((error as Error).message);
+    } catch (error: any) {
+      if (error.response?.data?.error) {
+        setErrorMessage(error.response.data.error as string);
+      } else {
+        setErrorMessage("An error occurred during login.");
+      }
     }
   };
 
@@ -70,7 +74,7 @@ function Register() {
     <div>
       {successfulRegistration && <p>Registration was successful!</p>}
       <Card className={classes.register}>
-        {errorMessage && <p>{errorMessage}</p>}
+        {errorMessage && <p className={classes.error}>{errorMessage}</p>}
         <form className={classes.form} onSubmit={submissionHandler}>
           <label>Email address</label>
           <input

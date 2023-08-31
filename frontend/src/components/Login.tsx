@@ -49,11 +49,14 @@ function Login() {
         navigate("/");
       } else {
         console.log("Login failed", data);
-        throw new Error(data.error as string);
+        setErrorMessage(data.error as string);
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      setErrorMessage((error as Error).message);
+    } catch (error: any) {
+      if (error.response?.data?.error) {
+        setErrorMessage(error.response.data.error as string);
+      } else {
+        setErrorMessage("An error occurred during login.");
+      }
     }
   };
 

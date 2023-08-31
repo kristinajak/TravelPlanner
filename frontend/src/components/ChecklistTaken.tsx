@@ -19,18 +19,20 @@ const ChecklistTaken: React.FC<ChecklistTakenProps> = ({ tableName }) => {
   const context = useContext(AuthContext);
 
   useEffect(() => {
-    Axios.get(`/checklist_checked?tableName=${tableName}`, {
-      withCredentials: true,
-    })
-      .then((response) => {
-        const userItemsChecked = response.data;
-        console.log("userItemsChecked", userItemsChecked);
-        setItems(userItemsChecked);
+    if (context.isLoggedIn) {
+      Axios.get(`/checklist_checked?tableName=${tableName}`, {
+        withCredentials: true,
       })
-      .catch((error) => {
-        console.error("Error fetching checklist checked data:", error);
-      });
-  }, [tableName]);
+        .then((response) => {
+          const userItemsChecked = response.data;
+          console.log("userItemsChecked", userItemsChecked);
+          setItems(userItemsChecked);
+        })
+        .catch((error) => {
+          console.error("Error fetching checklist checked data:", error);
+        });
+    }
+  }, [context.isLoggedIn, tableName]);
 
   return (
     <div>
@@ -45,7 +47,6 @@ const ChecklistTaken: React.FC<ChecklistTakenProps> = ({ tableName }) => {
           )}
         </div>
       )}
-      {!context.isLoggedIn && <div>Some other table</div>}
     </div>
   );
 };

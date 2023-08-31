@@ -5,6 +5,7 @@ import classes from "./Checklist.module.css";
 import ChecklistContainer from "./ChecklistContainer";
 import ChecklistTaken from "./ChecklistTaken";
 import ChecklistReadOnly from "./ChecklistReadOnly";
+import UpdateChecklist from "./UpdateChecklist";
 
 function ChecklistTables() {
   const context = useContext(AuthContext);
@@ -67,6 +68,19 @@ function ChecklistTables() {
           </div>
         ))}
       </div>
+
+      {context.isLoggedIn && (
+        <div>
+          <h2 className={classes.text}>Ready for a new trip?</h2>
+          <p>
+            Press the button to update your checklist once again.{" "}
+            <i>
+              Please note: all your checked items will be moved to unchecked.
+            </i>
+          </p>
+          <UpdateChecklist />
+        </div>
+      )}
     </div>
   );
 }

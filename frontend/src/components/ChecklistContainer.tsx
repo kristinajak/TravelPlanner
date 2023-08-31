@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Axios from "axios";
 
 import ChecklistItem from "./ChecklistItem";
+import classes from "./ChecklistContainer.module.css";
 
 interface ChecklistItemData {
   id: number;
@@ -32,28 +33,29 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({
       });
   }, [tableName]);
 
-  // const moveItemHandler = async (item: ChecklistItemData) => {
-  //   try {
-  //     const response = await Axios.post(
-  //       "/moveItem",
-  //       { tableName, item },
-  //       {
-  //         withCredentials: true,
-  //       }
-  //     );
-  //     if (response.status === 200) {
-  //       const updatedResponse = await Axios.get(
-  //         `/checklist?tableName=${tableName}`,
-  //         {
-  //           withCredentials: true,
-  //         }
-  //       );
-  //       setItems(updatedResponse.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error moving item:", error);
-  //   }
-  // };
+  const moveItemHandler = async (itemId: number, item: string) => {
+    try {
+      const response = await Axios.post(
+        `/moveItem/${tableName}/${itemId}`,
+        { item: item },
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        const updatedResponse = await Axios.get(
+          `/checklist?tableName=${tableName}`,
+          {
+            withCredentials: true,
+          }
+        );
+        setItems(updatedResponse.data);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error moving item:", error);
+    }
+  };
 
   const addItemHandler = async () => {
     try {
@@ -84,8 +86,8 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({
 
   const handleItemRemove = async (itemId: number) => {
     try {
-      const response = await Axios.post(
-        `/removeItem/${encodeURIComponent(tableName)}/${itemId}`,
+      const response = await Axios.delete(
+        `/removeItem/${tableName}/${itemId}`,
         {
           withCredentials: true,
         }
@@ -109,10 +111,11 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({
           item={item}
           tableName={tableName}
           onItemRemove={handleItemRemove}
-          // onItemMove={moveItemHandler}
+          onItemMove={moveItemHandler}
         />
       ))}
       <input
+        className={classes["new-item"]}
         value={newItem}
         onChange={(event) => setNewItem(event.target.value)}
         onKeyDown={(event) => {
