@@ -217,48 +217,21 @@ app.post("/moveItem/:tableName/:itemId", async (req, res) => {
   }
 });
 
-app.post("/moveItem/:tableName/:itemId", async (req, res) => {
+app.post("/addItem", async (req, res) => {
   try {
-    const { tableName, itemId } = req.params;
+    const { tableName, newItem } = req.body;
     const userId = req.session.userId;
 
-    const query = `INSERT INTO ${tableName}_checked (id, user_id) VALUES (?, ?)`;
+    const query = `INSERT INTO ${tableName} (item, user_id) VALUES (?, ?)`;
     const conn = await pool.getConnection();
-    const [rows, fields] = await conn.execute(query, [itemId, userId]);
+    const [rows, fields] = await conn.execute(query, [newItem, userId]);
     conn.release();
     res.sendStatus(200);
   } catch (error) {
-    console.error("Error moving checklist data:", error);
+    console.error("Error adding checklist data:", error);
     res
       .status(500)
-      .json({ error: "An error occurred while moving checklist data" });
-  }
-});
-
-app.delete("/removeItem/:tableName/:itemId", async (req, res) => {
-  try {
-    const { tableName, itemId } = req.params;
-    const userId = req.session.userId;
-
-    if (!itemId) {
-      return res.status(400).json({ error: "itemId is missing" });
-    }
-
-    const query = `DELETE FROM ${tableName} WHERE id = ? AND user_id = ?`;
-    const conn = await pool.getConnection();
-
-    try {
-      await conn.execute(query, [itemId, userId]);
-      conn.release();
-      res.status(200).json({ message: "Item deleted successfully" });
-    } catch (error) {
-      conn.release();
-      console.error("Error removing item:", error);
-      res.status(500).json({ error: "An error occurred while removing item" });
-    }
-  } catch (error) {
-    console.error("Error removing item:", error);
-    res.status(500).json({ error: "An error occurred while removing item" });
+      .json({ error: "An error occurred while adding checklist data" });
   }
 });
 
