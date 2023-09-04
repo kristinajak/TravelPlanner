@@ -9,19 +9,19 @@ interface ChecklistItemData {
 interface ChecklistItemProps {
   item: ChecklistItemData;
   tableName: string;
-  onItemRemove: (itemId: number) => void;
+  // onItemRemove: (itemId: number) => void;
   onItemMove: (itemId: number, item: string) => void;
 }
 
 const ChecklistItem: React.FC<ChecklistItemProps> = ({
   item,
   tableName,
-  onItemRemove,
+  // onItemRemove,
   onItemMove,
 }) => {
-  const handleRemoveClick = () => {
-    onItemRemove(item.id);
-  };
+  // const handleRemoveClick = () => {
+  //   onItemRemove(item.id);
+  // };
   const handleMoveClick = async () => {
     onItemMove(item.id, item.item);
   };
@@ -30,9 +30,6 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({
     <div className={classes["checklist-item"]}>
       <input type="checkbox" onChange={handleMoveClick} />
       <span>{item.item}</span>
-      <button className={classes["remove-button"]} onClick={handleRemoveClick}>
-        x
-      </button>
     </div>
   );
 };

@@ -1,0 +1,7 @@
+.checklist-item {
+  padding: 5px;
+}
+
+.checklist-item input[type="checkbox"] {
+  accent-color: #f6ad1b;
+}

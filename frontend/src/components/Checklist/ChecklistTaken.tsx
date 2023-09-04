@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import Axios from "axios";
 
-import AuthContext from "../store/auth-context";
+import AuthContext from "../../store/auth-context";
 
 import ChecklistItemTaken from "./ChecklistItemTaken";
 

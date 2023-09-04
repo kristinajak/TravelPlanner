@@ -1,0 +1,18 @@
+.itinerary-table {
+  width: 100%;
+  border: solid;
+  margin-top: 0;
+}
+
+.itinerary-table th {
+  font-weight: bold;
+  font-size: large;
+  border-bottom: solid 1px;
+  margin: 0;
+}
+
+.itinerary-table th,
+.itinerary-table td {
+  padding: 8px;
+  text-align: left;
+}

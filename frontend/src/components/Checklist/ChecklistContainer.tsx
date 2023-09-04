@@ -84,25 +84,6 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({
     }
   };
 
-  const handleItemRemove = async (itemId: number) => {
-    try {
-      const response = await Axios.delete(
-        `/removeItem/${tableName}/${itemId}`,
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-        console.log("Item removed successfully");
-      } else {
-        console.log("Item removal failed");
-      }
-    } catch (error) {
-      console.error("Error removing item:", error);
-    }
-  };
   return (
     <div>
       {items.map((item) => (
@@ -110,7 +91,6 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({
           key={item.id}
           item={item}
           tableName={tableName}
-          onItemRemove={handleItemRemove}
           onItemMove={moveItemHandler}
         />
       ))}

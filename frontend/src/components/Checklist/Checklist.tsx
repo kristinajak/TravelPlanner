@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "../store/auth-context";
+import AuthContext from "../../store/auth-context";
 import classes from "./Checklist.module.css";
 import ChecklistContainer from "./ChecklistContainer";
 import ChecklistTaken from "./ChecklistTaken";

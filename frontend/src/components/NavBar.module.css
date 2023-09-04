@@ -21,14 +21,22 @@
   color: #f6ad1b;
 }
 
+.logoutButtonContainer {
+  display: flex;
+  align-items: center;
+}
+
 .button {
   color: #fbd997;
   border: none;
   background-color: transparent;
   font-size: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 .button:hover {
   color: #f6ad1b;
   cursor: pointer;
+  margin: 0;
 }

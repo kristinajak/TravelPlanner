@@ -52,7 +52,7 @@ function MainNavigation() {
             </li>
           )}
           {context.isLoggedIn && (
-            <li>
+            <li className={classes.logoutButtonContainer}>
               <button className={classes.button} onClick={logoutHandler}>
                 Logout
               </button>

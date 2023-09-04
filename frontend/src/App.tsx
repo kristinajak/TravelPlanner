@@ -3,7 +3,8 @@ import HomePage from "./pages/Home";
 import Register from "./components/Register";
 import RootLayout from "./pages/Root";
 import Login from "./components/Login";
-import Checklist from "./components/Checklist";
+import Checklist from "./components/Checklist/Checklist";
+import Itinerary from "./components/Itinerary/Itinerary";
 
 import { AuthContextProvider } from "./store/auth-context";
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "checklist",
         element: <Checklist />,
+      },
+      {
+        path: "itinerary",
+        element: <Itinerary />,
       },
     ],
   },

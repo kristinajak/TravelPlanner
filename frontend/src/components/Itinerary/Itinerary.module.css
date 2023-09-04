@@ -1,0 +1,45 @@
+.itinerary {
+  color: #fbd997;
+  margin: 50px;
+}
+
+.map {
+  width: 90%;
+  height: 25rem;
+  border: 1px solid #fbd997;
+  margin: 2rem auto;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #fbd997;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 2rem auto;
+}
+
+button {
+  background-color: #fbd997;
+  color: black;
+  font-family: inherit;
+  font-size: 15px;
+  margin: 5px;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  border-radius: 5px;
+  border: none;
+  padding: 8px;
+  font-size: 15px;
+  font-family: inherit;
+}
