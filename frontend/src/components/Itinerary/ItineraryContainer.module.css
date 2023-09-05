@@ -16,3 +16,11 @@
   padding: 8px;
   text-align: left;
 }
+
+.itinerary-table input {
+  color: rgb(98, 96, 96);
+}
+
+.error {
+  color: rgb(227, 101, 101);
+}

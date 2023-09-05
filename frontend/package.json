@@ -51,6 +51,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/react-datepicker": "^4.15.0",
     "@types/react-router-dom": "^5.3.3"
   }
 }

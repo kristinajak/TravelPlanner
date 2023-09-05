@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Axios from "axios";
 import classes from "./Itinerary.module.css";
 import AuthContext from "../../store/auth-context";
@@ -7,7 +7,7 @@ import ItineraryContainer from "./ItineraryContainer";
 
 const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
-declare var google: any;
+declare let google: any;
 
 type GoogleGeocodingResponse = {
   results: { geometry: { location: { lat: number; lng: number } } }[];
@@ -26,7 +26,6 @@ const Itinerary: React.FC = () => {
     }
   };
 
-  // Function to handle the form submission
   const searchAddressHandler: React.FormEventHandler<HTMLFormElement> = async (
     event
   ) => {
