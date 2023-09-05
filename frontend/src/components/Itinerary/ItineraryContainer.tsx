@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import classes from "./ItineraryContainer.module.css";
+
 interface ItineraryItem {
   id: number;
   date: string;
@@ -8,7 +9,7 @@ interface ItineraryItem {
   comments: string;
 }
 
-const ItineraryContainer = () => {
+const ItineraryContainer: React.FC = () => {
   const [date, setDate] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [comments, setComments] = useState<string>("");
@@ -29,7 +30,7 @@ const ItineraryContainer = () => {
   };
 
   useEffect(() => {
-    fetchItineraryData(); // Fetch initial data when component mounts
+    fetchItineraryData();
   }, []);
 
   const addItineraryHandler = async (
@@ -62,6 +63,27 @@ const ItineraryContainer = () => {
       console.error("Error adding item:", error);
     }
   };
+
+  const removeItem = async (itemId: number) => {
+    try {
+      const response = await Axios.post(
+        `/itinerary/${itemId}/delete`,
+        { itemId },
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        const updatedResponse = await Axios.get("/itinerary", {
+          withCredentials: true,
+        });
+        setItineraryData(updatedResponse.data);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error removing item", error);
+    }
+  };
+
   return (
     <div>
       <form onSubmit={addItineraryHandler}>
@@ -79,6 +101,9 @@ const ItineraryContainer = () => {
                 <td>{item.date}</td>
                 <td>{item.city}</td>
                 <td>{item.comments}</td>
+                <td>
+                  <button onClick={() => removeItem(item.id)}>X</button>
+                </td>
               </tr>
             ))}
             <tr>

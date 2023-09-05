@@ -23,7 +23,6 @@ const ChecklistReadOnly: React.FC<ChecklistContainerProps> = ({
     })
       .then((response) => {
         const userItems = response.data;
-        console.log(userItems);
         setItems(userItems);
       })
       .catch((error) => {

@@ -5,6 +5,7 @@ import RootLayout from "./pages/Root";
 import Login from "./components/Login";
 import Checklist from "./components/Checklist/Checklist";
 import Itinerary from "./components/Itinerary/Itinerary";
+import Budget from "./components/Budget/Budget";
 
 import { AuthContextProvider } from "./store/auth-context";
 
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
         path: "itinerary",
         element: <Itinerary />,
       },
+      { path: "budget", element: <Budget /> },
     ],
   },
 ]);

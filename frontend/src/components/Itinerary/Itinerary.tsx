@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import Axios from "axios";
 import classes from "./Itinerary.module.css";
 import AuthContext from "../../store/auth-context";
@@ -14,9 +14,14 @@ type GoogleGeocodingResponse = {
   status: "OK" | "ZERO_RESULTS";
 };
 
+const DEFAULT_MAP_CENTER = { lat: 54.8985207, lng: 23.9035965 };
+
 const Itinerary: React.FC = () => {
-  const [inputValue, setInputValue] = useState(""); // State to store the user's entered address
+  const [inputValue, setInputValue] = useState("");
+  const [map, setMap] = useState<any>(null);
   const context = useContext(AuthContext);
+
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   const addressInputHandler: React.ChangeEventHandler<HTMLInputElement> = (
     event
@@ -25,6 +30,21 @@ const Itinerary: React.FC = () => {
       setInputValue(event.target.value);
     }
   };
+
+  const initializeMap = (center: { lat: number; lng: number }) => {
+    const newMap = new google.maps.Map(mapContainerRef.current as HTMLElement, {
+      center,
+      zoom: 14,
+    });
+
+    setMap(newMap);
+
+    new google.maps.Marker({ position: center, map: newMap });
+  };
+
+  useEffect(() => {
+    initializeMap(DEFAULT_MAP_CENTER);
+  }, []);
 
   const searchAddressHandler: React.FormEventHandler<HTMLFormElement> = async (
     event
@@ -44,14 +64,10 @@ const Itinerary: React.FC = () => {
 
       const coordinates = response.data.results[0].geometry.location;
       console.log(coordinates);
-      const map = new google.maps.Map(
-        document.getElementById("map") as HTMLElement,
-        {
-          center: coordinates,
-          zoom: 14,
-        }
-      );
-      new google.maps.Marker({ position: coordinates, map: map });
+
+      map.setCenter(coordinates);
+      map.setZoom(14);
+      new google.maps.Marker({ position: coordinates, map });
     } catch (error: any) {
       console.error("Error loading a map", error);
     }
@@ -67,9 +83,7 @@ const Itinerary: React.FC = () => {
       </p>
       {!context.isLoggedIn && <ItineraryReadOnly />}
       {context.isLoggedIn && <ItineraryContainer />}
-      <div id="map" className={classes.map}>
-        Please enter an address
-      </div>
+      <div id="map" className={classes.map} ref={mapContainerRef}></div>
       <form className={classes.form} onSubmit={searchAddressHandler}>
         <input
           type="text"

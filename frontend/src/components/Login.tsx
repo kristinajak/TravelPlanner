@@ -42,7 +42,6 @@ function Login() {
       console.log("login data: ", data);
 
       if (response.status === 200) {
-        console.log("Login successful", data);
         context.onLogin(email, password);
         setEmail("");
         setPassword("");

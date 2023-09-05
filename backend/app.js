@@ -314,6 +314,16 @@ app.post("/itinerary", async (req, res) => {
   res.sendStatus(200);
 });
 
+app.post("/itinerary/:id/delete", async (req, res) => {
+  const userId = req.session.userId;
+  const id = req.params.id;
+  const query = `DELETE FROM itinerary WHERE id = ? AND user_id = ?`;
+  const conn = await pool.getConnection();
+  const [result, fields] = await conn.execute(query, [id, userId]);
+  conn.release();
+  res.sendStatus(200);
+});
+
 app.get("/logout", function (req, res) {
   console.log("Before destroying session");
   req.session.destroy(function (err) {

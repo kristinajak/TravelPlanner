@@ -1,30 +1,35 @@
 import { Link } from "react-router-dom";
-import classes from "./ItineraryReadOnly.module.css";
+import classes from "./BudgetReadOnly.module.css";
 
-const ItineraryReadOnly = () => {
+const BudgetReadOnly = () => {
   return (
     <div>
-      <table className={classes["itinerary-table"]}>
+      <table className={classes["budget-table"]}>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>City</th>
-            <th>Comments</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Unit Cost</th>
+            <th>Total</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <i>e.g. March 30 - April 3</i>
+              <i>e.g. Lunch</i>
             </td>
             <td>
-              <i>e.g. Kaunas</i>
+              <i>e.g. Food</i>
             </td>
             <td>
-              <i>
-                e.g. Places to visit: Pazaislis Monastery, Kaunas Castle,
-                Oldtown
-              </i>
+              <i>e.g. 2 </i>
+            </td>
+            <td>
+              <i>e.g. €20 </i>
+            </td>
+            <td>
+              <i>e.g. €40 </i>
             </td>
           </tr>
         </tbody>
@@ -39,4 +44,4 @@ const ItineraryReadOnly = () => {
   );
 };
 
-export default ItineraryReadOnly;
+export default BudgetReadOnly;

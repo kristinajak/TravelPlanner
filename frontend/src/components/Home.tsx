@@ -54,17 +54,24 @@ function HomePageGuest() {
           </Link>
         </div>
         <div className={classes["image-container"]}>
-          <img className={classes.description} src={financeImg} alt="Finance" />
-          <div className={classes["description-container"]}>
-            <h2 className={classes.mobileText}>Travel Budget</h2>
-            <div className={classes["description-info"]}>
-              <h2>Travel budget</h2>
-              <p>Are you keen to get some numbers? </p>
-              <p>
-                Here you will find all the information about your travel budget.
-              </p>
+          <Link to="budget">
+            <img
+              className={classes.description}
+              src={financeImg}
+              alt="Finance"
+            />
+            <div className={classes["description-container"]}>
+              <h2 className={classes.mobileText}>Travel Budget</h2>
+              <div className={classes["description-info"]}>
+                <h2>Travel budget</h2>
+                <p>Are you keen to get some numbers? </p>
+                <p>
+                  Here you will find all the information about your travel
+                  budget.
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </>

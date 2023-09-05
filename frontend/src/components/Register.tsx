@@ -50,7 +50,6 @@ function Register() {
       const data: RegistrationResponse = response.data;
 
       if (response.status === 200) {
-        console.log(data.message);
         context.onLogin(email, password);
         setSuccessRegistration(true);
         setEmail("");
