@@ -49,6 +49,9 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({
           }
         );
         setItems(updatedResponse.data);
+        setItems((prevItems) =>
+          prevItems.filter((prevItem) => prevItem.id !== itemId)
+        );
         window.location.reload();
       }
     } catch (error) {

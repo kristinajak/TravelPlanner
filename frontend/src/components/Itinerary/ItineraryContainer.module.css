@@ -18,9 +18,38 @@
 }
 
 .itinerary-table input {
-  color: rgb(98, 96, 96);
+  color: black;
+}
+
+.itinerary-table input::placeholder {
+  color: black;
 }
 
 .error {
   color: rgb(227, 101, 101);
+}
+
+@media (max-width: 920px) {
+  .itinerary-table {
+    width: 100px;
+    border: solid;
+    margin-top: 0;
+    border: solid 1px;
+    white-space: normal;
+  }
+
+  .itinerary-table th,
+  .itinerary-table td {
+    font-size: 14px;
+    padding: 6px;
+    white-space: normal;
+  }
+
+  .budget-table input {
+    font-size: 14px;
+    padding: 2px;
+    width: 100px;
+    white-space: normal;
+    height: 40px;
+  }
 }

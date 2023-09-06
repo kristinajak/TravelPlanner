@@ -74,7 +74,6 @@
 }
 
 @media (max-width: 850px) {
-  /* Override the above style for mobile screens */
   .mobileText {
     display: block;
     color: #242424;

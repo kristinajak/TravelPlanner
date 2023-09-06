@@ -77,7 +77,6 @@ const ItineraryContainer: React.FC = () => {
           withCredentials: true,
         });
         setItineraryData(updatedResponse.data);
-        window.location.reload();
       }
     } catch (error) {
       console.error("Error removing item", error);
@@ -102,18 +101,22 @@ const ItineraryContainer: React.FC = () => {
                 <td>{item.city}</td>
                 <td>{item.comments}</td>
                 <td>
-                  <button onClick={() => removeItem(item.id)}>X</button>
+                  <button type="button" onClick={() => removeItem(item.id)}>
+                    X
+                  </button>
                 </td>
               </tr>
             ))}
             <tr>
               <td>
-                <input
-                  type="date"
-                  name="newDate"
-                  value={date}
-                  onChange={(event) => setDate(event.target.value)}
-                />
+                <div className={classes.date}>
+                  <input
+                    type="date"
+                    name="newDate"
+                    value={date}
+                    onChange={(event) => setDate(event.target.value)}
+                  />
+                </div>
               </td>
               <td>
                 <input

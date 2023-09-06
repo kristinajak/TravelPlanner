@@ -1,5 +1,4 @@
 import React from "react";
-import classes from "./ChecklistItemTaken.module.css";
 
 interface ChecklistItemProps {
   item: {
@@ -10,7 +9,7 @@ interface ChecklistItemProps {
 
 const ChecklistItemTaken: React.FC<ChecklistItemProps> = ({ item }) => {
   return (
-    <div className={classes["checklist-item-taken"]}>
+    <div>
       <span>{item.item}</span>
     </div>
   );

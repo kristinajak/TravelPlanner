@@ -52,6 +52,42 @@ function MainNavigation() {
             </li>
           )}
           {context.isLoggedIn && (
+            <li>
+              <NavLink
+                to="/checklist"
+                className={({ isActive }) =>
+                  isActive ? classes.active : undefined
+                }
+              >
+                Checklist
+              </NavLink>
+            </li>
+          )}
+          {context.isLoggedIn && (
+            <li>
+              <NavLink
+                to="/itinerary"
+                className={({ isActive }) =>
+                  isActive ? classes.active : undefined
+                }
+              >
+                Itinerary
+              </NavLink>
+            </li>
+          )}
+          {context.isLoggedIn && (
+            <li>
+              <NavLink
+                to="/budget"
+                className={({ isActive }) =>
+                  isActive ? classes.active : undefined
+                }
+              >
+                Budget
+              </NavLink>
+            </li>
+          )}
+          {context.isLoggedIn && (
             <li className={classes.logoutButtonContainer}>
               <button className={classes.button} onClick={logoutHandler}>
                 Logout

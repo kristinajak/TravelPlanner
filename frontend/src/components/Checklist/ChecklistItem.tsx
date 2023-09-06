@@ -9,19 +9,10 @@ interface ChecklistItemData {
 interface ChecklistItemProps {
   item: ChecklistItemData;
   tableName: string;
-  // onItemRemove: (itemId: number) => void;
   onItemMove: (itemId: number, item: string) => void;
 }
 
-const ChecklistItem: React.FC<ChecklistItemProps> = ({
-  item,
-  tableName,
-  // onItemRemove,
-  onItemMove,
-}) => {
-  // const handleRemoveClick = () => {
-  //   onItemRemove(item.id);
-  // };
+const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onItemMove }) => {
   const handleMoveClick = async () => {
     onItemMove(item.id, item.item);
   };

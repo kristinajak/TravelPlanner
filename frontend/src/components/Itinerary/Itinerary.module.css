@@ -42,4 +42,11 @@ input {
   padding: 8px;
   font-size: 15px;
   font-family: inherit;
+  color: black;
+  background-color: rgb(244, 219, 176);
+  border: solid 1px black;
+}
+
+input::placeholder {
+  color: black;
 }

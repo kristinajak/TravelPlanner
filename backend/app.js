@@ -297,21 +297,26 @@ app.get("/itinerary", async (req, res) => {
 });
 
 app.post("/itinerary", async (req, res) => {
-  const userId = req.session.userId;
-  const newDate = req.body.date;
-  const newCity = req.body.city;
-  const newComments = req.body.comments;
-  console.log(userId, newCity, newDate, newComments);
-  const query = `INSERT INTO itinerary (date, city, comments, user_id) VALUES (?, ?, ?, ?)`;
-  const conn = await pool.getConnection();
-  const [result, fields] = await conn.execute(query, [
-    newDate,
-    newCity,
-    newComments,
-    userId,
-  ]);
-  conn.release();
-  res.sendStatus(200);
+  try {
+    const userId = req.session.userId;
+    const newDate = req.body.date;
+    const newCity = req.body.city;
+    const newComments = req.body.comments;
+    console.log(userId, newCity, newDate, newComments);
+    const query = `INSERT INTO itinerary (date, city, comments, user_id) VALUES (?, ?, ?, ?)`;
+    const conn = await pool.getConnection();
+    const [result, fields] = await conn.execute(query, [
+      newDate,
+      newCity,
+      newComments,
+      userId,
+    ]);
+    conn.release();
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred adding an item" });
+  }
 });
 
 app.post("/itinerary/:id/delete", async (req, res) => {
@@ -322,6 +327,78 @@ app.post("/itinerary/:id/delete", async (req, res) => {
   const [result, fields] = await conn.execute(query, [id, userId]);
   conn.release();
   res.sendStatus(200);
+});
+
+app.get("/budget", async (req, res) => {
+  if (req.session.userId) {
+    const userId = req.session.userId;
+    const conn = await pool.getConnection();
+    const [rows, fields] = await conn.query(
+      `SELECT * FROM budget WHERE user_id = ${userId}`
+    );
+
+    conn.release();
+    const data = rows.map((row) => {
+      return {
+        id: row.id,
+        description: row.description,
+        category: row.category,
+        quantity: row.quantity,
+        unitCost: row.unit_cost,
+        total: row.total,
+      };
+    });
+
+    res.json(data);
+  } else {
+    res.status(500).json({ error: "Data is not available" });
+  }
+});
+
+app.post("/budget", async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const newDescription = req.body.description;
+    const newCategory = req.body.category;
+    const newQuantity = req.body.quantity;
+    const newUnitCost = req.body.unitCost;
+    const newTotal = req.body.total;
+    console.log(
+      newDescription,
+      newCategory,
+      newQuantity,
+      newUnitCost,
+      newTotal,
+      userId
+    );
+
+    const query = `INSERT INTO budget (description, category, quantity, unit_cost, user_id, total) VALUES (?, ?, ?, ?, ?, ?)`;
+    const conn = await pool.getConnection();
+    const [result, fields] = await conn.execute(query, [
+      newDescription,
+      newCategory,
+      newQuantity,
+      newUnitCost,
+      userId,
+      newTotal,
+    ]);
+    conn.release();
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred adding an item" });
+  }
+});
+
+app.post("/budget/:id/delete", async (req, res) => {
+  const userId = req.session.userId;
+  const id = req.params.id;
+  console.log(userId, id);
+  const query = `DELETE FROM budget WHERE id = ? AND user_id = ?`;
+  const conn = await pool.getConnection();
+  const [result, fields] = await conn.execute(query, [id, userId]);
+  conn.release();
+  res.redirect("/budget");
 });
 
 app.get("/logout", function (req, res) {

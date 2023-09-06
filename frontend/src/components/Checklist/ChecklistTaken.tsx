@@ -16,6 +16,7 @@ interface ChecklistTakenProps {
 
 const ChecklistTaken: React.FC<ChecklistTakenProps> = ({ tableName }) => {
   const [items, setItems] = useState<ChecklistItemData[]>([]);
+
   const context = useContext(AuthContext);
 
   useEffect(() => {
