@@ -36,6 +36,7 @@
     margin-top: 0;
     border: solid 1px;
     white-space: normal;
+    overflow-x: auto;
   }
 
   .itinerary-table th,

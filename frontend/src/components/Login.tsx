@@ -61,7 +61,7 @@ function Login() {
 
   return (
     <div>
-      <Card className={classes.login}>
+      <Card className={classes.login} data-testid="login-card">
         {errorMessage && <p className={classes.error}>{errorMessage}</p>}
         <form className={classes.form} onSubmit={submissionHandler}>
           <label>Email address</label>
